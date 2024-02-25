@@ -61,7 +61,7 @@ function Document({
 	title?: string;
 }) {
 	return (
-		<html lang="en">
+		<html lang="ko">
 			<head>
 				<meta charSet="utf-8" />
 				{title ? <title>{title}</title> : null}

@@ -2,8 +2,8 @@ import type { Endpoints } from '@octokit/types';
 import type { AppLoadContext } from '@remix-run/cloudflare';
 
 export const metadata = {
-	repo: 'remix-cloudflare-template',
-	owner: 'edmundhung',
+	repo: 'wxrenamer',
+	owner: 'cpro95',
 };
 
 export function getHeaders(auth: string | undefined) {
@@ -48,7 +48,14 @@ export async function getFileContent(options: {
 		throw new Response('Not found', { status: 404 });
 	}
 
-	return atob(file.content);
+	// return atob(file.content);
+
+	// return atob(file.content);
+
+	// Decode using custom UTF-8 decoding function
+	const content = decodeUTF8(file.content);
+
+	return content;
 }
 
 export async function getFileContentWithCache(
@@ -74,4 +81,16 @@ export async function getFileContentWithCache(
 	await context.env.cache.put(key, content, { expirationTtl: 60 * 60 });
 
 	return content;
+}
+
+function decodeUTF8(base64: string): string {
+	const binaryString = atob(base64);
+	const bytes = new Uint8Array(binaryString.length);
+
+	for (let i = 0; i < binaryString.length; i++) {
+		bytes[i] = binaryString.charCodeAt(i);
+	}
+
+	// Use TextDecoder to handle UTF-8 decoding
+	return new TextDecoder('utf-8').decode(bytes);
 }
